@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { Task, TaskStatus } from "./task.model";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { QueryDto, Task, TaskStatus } from "./task.model";
 
 @Injectable()
 export class TasksService {
@@ -36,9 +36,34 @@ export class TasksService {
     },
   ];
 
-  getFilteredTasks(
-    status?: TaskStatus,
-    page?: number,
-    limit?: number,
-  ): Task[] {}
+  getFilteredTasks(filterParams: QueryDto): Task[] {
+    let filtredTasks: Task[] = [...this.tasks];
+
+    if (filterParams.status) {
+      filtredTasks = filtredTasks.filter((task: Task) => task.status === filterParams.status)
+    }
+
+    if (filterParams.sortBy) {
+      filtredTasks = filtredTasks.sort((a, b) => {
+        if (a < b) {
+          return -1;
+        } else if (a > b) {
+          return 1;
+        } else {
+          return 0;
+        }
+      })
+    }
+
+    if (filterParams.page || filterParams.limit) {
+      if (filterParams.page && filterParams.limit) {
+        const startIndex = (filterParams.page - 1) * filterParams.limit;
+        filtredTasks = filtredTasks.splice(startIndex,  filterParams.limit);
+      } else if (!filterParams.page && filterParams.limit) {
+        return filtredTasks.slice(0, filterParams.limit + 1);
+      }
+    }
+
+    return filtredTasks;
+  }
 }

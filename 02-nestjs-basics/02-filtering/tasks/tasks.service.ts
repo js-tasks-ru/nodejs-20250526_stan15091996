@@ -36,9 +36,22 @@ export class TasksService {
     },
   ];
 
-  getFilteredTasks(
-    status?: TaskStatus,
-    page?: number,
-    limit?: number,
-  ): Task[] {}
+  getFilteredTasks(status?: TaskStatus, page?: number, limit?: number): Task[] {
+    let filteredTasks = this.tasks;
+
+    // Filter by status if provided
+    if (status) {
+      filteredTasks = filteredTasks.filter((task) => task.status === status);
+    }
+
+    // default values
+    page = page ?? 1;
+    limit = limit ?? 10;
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    filteredTasks = filteredTasks.slice(startIndex, endIndex);
+
+    return filteredTasks;
+  }
 }

@@ -45,9 +45,9 @@ export class TasksService {
 
     if (filterParams.sortBy) {
       filtredTasks = filtredTasks.sort((a, b) => {
-        if (a < b) {
+        if (a[filterParams.sortBy] < b[filterParams.sortBy]) {
           return -1;
-        } else if (a > b) {
+        } else if (a[filterParams.sortBy] > b[filterParams.sortBy]) {
           return 1;
         } else {
           return 0;
@@ -58,7 +58,8 @@ export class TasksService {
     if (filterParams.page || filterParams.limit) {
       if (filterParams.page && filterParams.limit) {
         const startIndex = (filterParams.page - 1) * filterParams.limit;
-        filtredTasks = filtredTasks.splice(startIndex,  filterParams.limit);
+        const endIndex = startIndex + filterParams.limit
+        filtredTasks = filtredTasks.slice(startIndex,  endIndex);
       } else if (!filterParams.page && filterParams.limit) {
         return filtredTasks.slice(0, filterParams.limit + 1);
       }

@@ -1,6 +1,6 @@
 import { DynamicModule, Module } from "@nestjs/common";
 import { NotificationsService } from "./notifications.service";
-import { UsersModule } from "users/users.module";
+import { UsersModule } from "../users/users.module";
 import { INotificationsOption } from "./notifications.model";
 
 @Module({})

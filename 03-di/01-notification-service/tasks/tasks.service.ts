@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateTaskDto, Task, TaskStatus, UpdateTaskDto } from "./task.model";
-import { NotificationsService } from "notifications/notifications.service";
-import { UsersService } from "users/users.service";
+import { NotificationsService } from "../notifications/notifications.service";
+import { UsersService } from "../users/users.service";
 
 @Injectable()
 export class TasksService {
@@ -27,7 +27,9 @@ export class TasksService {
 
     this.tasks.push(task);
 
-    this.notificationsService.sendEmail(user.email, 'Новая задача', task.title);
+    const titleForEmail = 'Вы назначены ответственным за задачу: ' + `\"${task.title}\"`;
+
+    this.notificationsService.sendEmail(user.email, 'Новая задача', titleForEmail);
 
     return task;
   }
@@ -45,7 +47,7 @@ export class TasksService {
 
     Object.assign(task, updateTaskDto);
 
-    this.notificationsService.sendSMS(user.phone, 'Статус задачи "Сделать домашнюю работу" обновлён на "completed"');
+    this.notificationsService.sendSMS(user.phone, 'Статус задачи ' + `\"${task.title}\"` + ' обновлён на ' + `\"${updateTaskDto.status}\"`);
 
     return task;
   }

@@ -7,12 +7,12 @@ import {
   UsePipes,
 } from "@nestjs/common";
 import * as request from "supertest";
-import { ParseIntPipe } from "../../pipes/parse-int.pipe";
+import {CustomParseIntPipe } from "../../pipes/parse-int.pipe";
 
 @Controller("mock")
 class MockController {
   @Get(":id")
-  getMockData(@Param("id", ParseIntPipe) id: number) {
+  getMockData(@Param("id", CustomParseIntPipe) id: number) {
     return { id, message: "Mock Data" };
   }
 }

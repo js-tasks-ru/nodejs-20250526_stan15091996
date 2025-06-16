@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { Task, TaskStatus } from "./task.model";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { QueryDto, Task, TaskStatus } from "./task.model";
 
 @Injectable()
 export class TasksService {
@@ -36,22 +36,35 @@ export class TasksService {
     },
   ];
 
-  getFilteredTasks(status?: TaskStatus, page?: number, limit?: number): Task[] {
-    let filteredTasks = this.tasks;
+  getFilteredTasks(filterParams: QueryDto): Task[] {
+    let filtredTasks: Task[] = [...this.tasks];
 
-    // Filter by status if provided
-    if (status) {
-      filteredTasks = filteredTasks.filter((task) => task.status === status);
+    if (filterParams.status) {
+      filtredTasks = filtredTasks.filter((task: Task) => task.status === filterParams.status)
     }
 
-    // default values
-    page = page ?? 1;
-    limit = limit ?? 10;
+    if (filterParams.sortBy) {
+      filtredTasks = filtredTasks.sort((a, b) => {
+        if (a[filterParams.sortBy] < b[filterParams.sortBy]) {
+          return -1;
+        } else if (a[filterParams.sortBy] > b[filterParams.sortBy]) {
+          return 1;
+        } else {
+          return 0;
+        }
+      })
+    }
 
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    filteredTasks = filteredTasks.slice(startIndex, endIndex);
+    if (filterParams.page || filterParams.limit) {
+      if (filterParams.page && filterParams.limit) {
+        const startIndex = (filterParams.page - 1) * filterParams.limit;
+        const endIndex = startIndex + filterParams.limit
+        filtredTasks = filtredTasks.slice(startIndex,  endIndex);
+      } else if (!filterParams.page && filterParams.limit) {
+        return filtredTasks.slice(0, filterParams.limit + 1);
+      }
+    }
 
-    return filteredTasks;
+    return filtredTasks;
   }
 }

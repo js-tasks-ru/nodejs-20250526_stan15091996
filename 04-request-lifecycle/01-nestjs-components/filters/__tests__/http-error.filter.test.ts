@@ -36,7 +36,7 @@ describe("HttpErrorFilter", () => {
 
     expect(fsSpy).toHaveBeenCalledWith(
       "errors.log",
-      expect.stringMatching(/\[.*\] 500 - Internal server error\n/),
+      expect.stringMatching(/\[.*\] 500 - Mock error for testing\n/),
     );
 
     fsSpy.mockRestore();
@@ -49,7 +49,7 @@ describe("HttpErrorFilter", () => {
 
     expect(response.body).toEqual({
       statusCode: 500,
-      message: "Internal server error",
+      message: "Mock error for testing",
       timestamp: expect.any(String),
     });
   });

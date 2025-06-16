@@ -18,7 +18,7 @@ export class HttpErrorFilter implements ExceptionFilter {
       .status(status)
       .json({
         statusCode: status,
-        message: "Mock error for testing",
+        message: message,
         timestamp: timestamp,
       });
   }

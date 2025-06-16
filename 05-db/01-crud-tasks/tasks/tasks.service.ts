@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateTaskDto } from "./dto/create-task.dto";
 import { UpdateTaskDto } from "./dto/update-task.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -21,20 +21,24 @@ export class TasksService {
   }
 
   async findOne(id: number) {
-    return await this.taskRepository.find({where: {id}});
+    const currentTask = await this.taskRepository.find({where: {id}});
+    
+    if (!currentTask.length) {
+      throw new NotFoundException('Задачи с данным id не существует');
+    }
+
+    return currentTask[0];
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto) {
+    const currentTask = await this.findOne(id);
+
     await this.taskRepository.update(id, updateTaskDto);
     return await this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {
     const currentTask = await this.findOne(id);
-
-    if (!currentTask.length) {
-      throw new BadRequestException('Задачи с данным id не существует');
-    }
 
     await this.taskRepository.delete(id);
   }

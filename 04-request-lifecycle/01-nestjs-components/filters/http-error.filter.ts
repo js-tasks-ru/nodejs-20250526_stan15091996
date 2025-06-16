@@ -12,7 +12,7 @@ export class HttpErrorFilter implements ExceptionFilter {
     console.log(exception);
     const timestamp = new Date().toISOString();
 
-    appendFileSync('./errors.logs', `[${timestamp} ${status}] - ${message}`);
+    appendFileSync('./errors.logs', `[${timestamp}] ${status} - ${message}`);
 
     response
       .status(status)

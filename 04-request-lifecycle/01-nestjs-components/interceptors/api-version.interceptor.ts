@@ -10,7 +10,7 @@ export class ApiVersionInterceptor implements NestInterceptor {
         return {
           ...data,
           apiVersion: "1.0",
-          executionTime: Number(new Date()) - Number(currentDate)
+          executionTime: `${Number(new Date()) - Number(currentDate)}ms`
         };
       }),
     );

@@ -20,7 +20,7 @@ export class MockController {
 }
 
 describe("MongoFilter", () => {
-  let app: INestApplication;
+  let app: any;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

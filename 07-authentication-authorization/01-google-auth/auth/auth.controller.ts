@@ -1,18 +1,26 @@
-import { Controller, Get, Request } from "@nestjs/common";
+import { Controller, Get, Request, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
+import { AuthGuard } from "@nestjs/passport";
+import { Public } from "./public.decorator";
 
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
+  @UseGuards(AuthGuard('google'))
   @Get("google")
   google() {
     return "ok";
   }
 
+  @Public()
+  @UseGuards(AuthGuard('google'))
   @Get("google/callback")
   async googleCallback(@Request() req) {
-    const result = await this.authService.login(req.user);
+    const result: any = await this.authService.login(req.user);
+    console.log('result');
+    console.log(result);
 
     // Return an HTML payload that:
     // 1) Displays a message,
@@ -26,7 +34,7 @@ export class AuthController {
       <body>
         <p>wait until login is complete</p>
         <script>
-          localStorage.setItem('token', '${result.token}');
+          localStorage.setItem('token', '${result.access_token}');
           window.location.href = '/';
         </script>
       </body>

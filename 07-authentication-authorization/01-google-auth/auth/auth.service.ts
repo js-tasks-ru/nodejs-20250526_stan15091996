@@ -6,5 +6,10 @@ import { User } from "../users/entities/user.entity";
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  async login(user: User) {}
+  async login(user: User) {
+    const payload = { username: user.displayName, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
 }

@@ -7,7 +7,7 @@ import { Task } from "../schemas/task.schema";
 import { Model } from "mongoose";
 
 describe("TasksController (e2e)", () => {
-  let app: INestApplication;
+  let app: any;
   let taskModel: Model<Task>;
 
   beforeAll(async () => {

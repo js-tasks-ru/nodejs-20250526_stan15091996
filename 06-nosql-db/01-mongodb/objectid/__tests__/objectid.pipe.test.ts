@@ -13,7 +13,7 @@ class MockController {
 }
 
 describe("ObjectIDPipe (e2e)", () => {
-  let app: INestApplication;
+  let app: any;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
